@@ -1,0 +1,19 @@
+{
+  "name": "ai-forum-2000s",
+  "version": "1.0.0",
+  "description": "A 2000s-style forum with AI users powered by transformers.js",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx http-server -p 8080",
+    "start": "npx http-server -p 8080"
+  },
+  "keywords": ["ai", "forum", "transformers.js", "retro"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@xenova/transformers": "^2.17.2"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}

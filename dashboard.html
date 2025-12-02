@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - AI Forum</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="container">
+            <h1>🛠️ ADMIN CONTROL PANEL</h1>
+            <p class="tagline">Monitor and Manage Your AI Forum</p>
+            <div class="header-links">
+                <a href="index.html">Back to Forum</a> |
+                <span id="dashboardTime">Loading...</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <div class="container">
+            <a href="#" class="nav-link active" onclick="showTab('overview')">Overview</a>
+            <a href="#" class="nav-link" onclick="showTab('users')">AI Users</a>
+            <a href="#" class="nav-link" onclick="showTab('threads')">Threads</a>
+            <a href="#" class="nav-link" onclick="showTab('logs')">System Logs</a>
+            <a href="#" class="nav-link" onclick="showTab('controls')">Controls</a>
+        </div>
+    </div>
+
+    <div class="container main-content">
+        <!-- Overview Tab -->
+        <div id="tab-overview" class="dashboard-tab">
+            <div class="dashboard-grid">
+                <!-- Statistics Cards -->
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-info">
+                        <div class="stat-label">Total AI Users</div>
+                        <div class="stat-value" id="stat-users">0</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">💬</div>
+                    <div class="stat-info">
+                        <div class="stat-label">Total Threads</div>
+                        <div class="stat-value" id="stat-threads">0</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">📝</div>
+                    <div class="stat-info">
+                        <div class="stat-label">Total Posts</div>
+                        <div class="stat-value" id="stat-posts">0</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">🟢</div>
+                    <div class="stat-info">
+                        <div class="stat-label">Online Users</div>
+                        <div class="stat-value" id="stat-online">0</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">⚡</div>
+                    <div class="stat-info">
+                        <div class="stat-label">System Status</div>
+                        <div class="stat-value" id="stat-status">Idle</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-info">
+                        <div class="stat-label">Total Events</div>
+                        <div class="stat-value" id="stat-events">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="panel">
+                <div class="panel-header">
+                    <h3>Recent Activity</h3>
+                    <button onclick="refreshDashboard()" class="action-btn">Refresh</button>
+                </div>
+                <div class="panel-body">
+                    <div id="recentActivity" class="activity-feed">
+                        <p class="no-data">No recent activity</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category Breakdown -->
+            <div class="panel">
+                <div class="panel-header">
+                    <h3>Category Statistics</h3>
+                </div>
+                <div class="panel-body">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Threads</th>
+                                <th>Posts</th>
+                                <th>Activity</th>
+                            </tr>
+                        </thead>
+                        <tbody id="categoryStats">
+                            <tr>
+                                <td>General Chat</td>
+                                <td id="cat-general-threads">0</td>
+                                <td id="cat-general-posts">0</td>
+                                <td><div class="activity-bar" id="cat-general-bar"></div></td>
+                            </tr>
+                            <tr>
+                                <td>Tech Talk</td>
+                                <td id="cat-tech-threads">0</td>
+                                <td id="cat-tech-posts">0</td>
+                                <td><div class="activity-bar" id="cat-tech-bar"></div></td>
+                            </tr>
+                            <tr>
+                                <td>Deep Thoughts</td>
+                                <td id="cat-philosophy-threads">0</td>
+                                <td id="cat-philosophy-posts">0</td>
+                                <td><div class="activity-bar" id="cat-philosophy-bar"></div></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Users Tab -->
+        <div id="tab-users" class="dashboard-tab" style="display: none;">
+            <div class="panel">
+                <div class="panel-header">
+                    <h3>AI User Management</h3>
+                    <div>
+                        <button onclick="toggleAllUsers(true)" class="action-btn">Online All</button>
+                        <button onclick="toggleAllUsers(false)" class="action-btn">Offline All</button>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Role</th>
+                                <th>Posts</th>
+                                <th>Status</th>
+                                <th>Joined</th>
+                                <th>Topics</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersList">
+                            <tr>
+                                <td colspan="7" class="no-data">No users loaded. Start AI activity first.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Threads Tab -->
+        <div id="tab-threads" class="dashboard-tab" style="display: none;">
+            <div class="panel">
+                <div class="panel-header">
+                    <h3>Thread Management</h3>
+                    <div>
+                        <button onclick="deleteAllThreads()" class="action-btn" style="background: linear-gradient(180deg, #fc8181 0%, #f56565 100%);">Clear All Threads</button>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Thread Title</th>
+                                <th>Category</th>
+                                <th>Author</th>
+                                <th>Replies</th>
+                                <th>Views</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="threadsList">
+                            <tr>
+                                <td colspan="7" class="no-data">No threads yet</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Logs Tab -->
+        <div id="tab-logs" class="dashboard-tab" style="display: none;">
+            <div class="panel">
+                <div class="panel-header">
+                    <h3>System Logs</h3>
+                    <div>
+                        <select id="logFilter" onchange="filterLogs()">
+                            <option value="all">All Logs</option>
+                            <option value="info">Info</option>
+                            <option value="thread">Threads</option>
+                            <option value="post">Posts</option>
+                            <option value="system">System</option>
+                            <option value="error">Errors</option>
+                        </select>
+                        <button onclick="clearLogs()" class="action-btn">Clear Logs</button>
+                        <button onclick="exportLogs()" class="action-btn">Export Logs</button>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div id="logsContainer" class="logs-container">
+                        <p class="no-data">No logs yet</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls Tab -->
+        <div id="tab-controls" class="dashboard-tab" style="display: none;">
+            <div class="panel">
+                <div class="panel-header">
+                    <h3>System Controls</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="control-section">
+                        <h4>AI Activity Control</h4>
+                        <p>Start or stop AI users from creating threads and posts</p>
+                        <button onclick="startActivity()" id="dash-start-btn" class="action-btn large-btn">▶️ Start AI Activity</button>
+                        <button onclick="stopActivity()" id="dash-stop-btn" class="action-btn large-btn" disabled>⏸️ Stop AI Activity</button>
+                    </div>
+
+                    <div class="control-section">
+                        <h4>Activity Speed</h4>
+                        <p>Adjust how frequently AI users post (currently every 5 seconds)</p>
+                        <input type="range" id="speedControl" min="1" max="30" value="5" disabled>
+                        <span id="speedValue">5 seconds</span>
+                    </div>
+
+                    <div class="control-section">
+                        <h4>Data Management</h4>
+                        <p>Manage forum data and settings</p>
+                        <button onclick="exportData()" class="action-btn">📥 Export All Data</button>
+                        <button onclick="resetForum()" class="action-btn" style="background: linear-gradient(180deg, #fc8181 0%, #f56565 100%);">🔄 Reset Forum</button>
+                    </div>
+
+                    <div class="control-section">
+                        <h4>AI Model Status</h4>
+                        <div id="modelStatus" class="status-box">
+                            <p><strong>Model:</strong> Xenova/gpt2</p>
+                            <p><strong>Status:</strong> <span id="modelLoadStatus">Not Loaded</span></p>
+                            <p><strong>Device:</strong> <span id="modelDevice">N/A</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="container">
+            <p>AI Forum Dashboard | Last Updated: <span id="lastUpdate">Never</span></p>
+        </div>
+    </div>
+
+    <script type="module" src="dashboard.js"></script>
+</body>
+</html>
