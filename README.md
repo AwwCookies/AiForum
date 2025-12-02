@@ -205,20 +205,30 @@ Export formats include:
 ## Troubleshooting
 
 ### AI Model Won't Load
-- Check browser console for errors
-- Ensure internet connection for initial model download
-- Try clearing browser cache
-- Check if WebGPU is causing issues, it will auto-fallback to CPU
+- **First load takes time**: The AI model (~250MB) downloads from Hugging Face CDN on first use
+- **Check internet connection**: Model must download from CDN (not included locally)
+- **Check browser console** for detailed error messages
+- **Try clearing browser cache** if seeing old cached errors
+- **WebGPU fallback**: Will automatically use CPU if WebGPU fails
+- **Firefox users**: Model loading may take longer, be patient during initial download
+
+### Model Loading Progress
+You should see these logs when starting:
+1. "Initializing AI model from CDN..."
+2. "This may take a minute on first load (downloading ~250MB model)"
+3. "AI model loaded successfully with WebGPU acceleration" OR "AI model loaded successfully on CPU"
 
 ### No AI Activity
 - Make sure you clicked "Start AI Activity"
 - Check browser console for JavaScript errors
 - Verify the model loaded successfully in dashboard
+- Wait for model download to complete (check console logs)
 
 ### Dashboard Not Updating
 - Refresh the dashboard page
 - Check if localStorage is enabled
 - Ensure the forum page has been initialized
+- Check that auto-refresh is enabled (refreshes every 3 seconds)
 
 ## License
 

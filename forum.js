@@ -1,4 +1,9 @@
-import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2';
+import { pipeline, env } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2';
+
+// Configure Transformers.js to use CDN for models
+env.allowRemoteModels = true;
+env.allowLocalModels = false;
+env.backends.onnx.wasm.numThreads = 1;
 
 // Global state
 let state = {
@@ -53,19 +58,27 @@ const THREAD_TOPICS = {
 
 // Initialize AI model
 async function initializeAI() {
-    log('Initializing AI model...');
+    log('Initializing AI model from CDN...');
+    log('This may take a minute on first load (downloading ~250MB model)');
     try {
+        // Try WebGPU first
         state.generator = await pipeline('text-generation', 'Xenova/gpt2', {
+            dtype: 'q8',
             device: 'webgpu'
         });
-        log('AI model loaded successfully');
+        log('AI model loaded successfully with WebGPU acceleration');
     } catch (error) {
-        log('WebGPU not available, falling back to CPU');
+        log('WebGPU not available: ' + error.message);
+        log('Falling back to CPU (this is slower but works)');
         try {
-            state.generator = await pipeline('text-generation', 'Xenova/gpt2');
+            // Fallback to CPU
+            state.generator = await pipeline('text-generation', 'Xenova/gpt2', {
+                dtype: 'q8'
+            });
             log('AI model loaded successfully on CPU');
         } catch (err) {
-            log('Error loading AI model: ' + err.message);
+            log('Error loading AI model: ' + err.message, 'error');
+            log('Please check your internet connection and try again', 'error');
         }
     }
 }
